@@ -49,7 +49,19 @@ Follow up: Can you come up with an algorithm that runs in O(m + n) time?
 
 """
 
-class Solution:
+class OldSolution:
+    """
+    나의 풀이를 분석해보자.
+
+    시간 복잡도를 먼저 고려해보자.
+    - 이중 루프에서 worst case는 n*m
+    - insert item에서 worst case는 n+m
+        - m 루프 하나에서 한번의 n+m이 발생
+        - 따라서 big-O notaion으로 표현할 때는 더해야 함
+    따라서 O(n*(m+n+m)) = O(n*m + n^2)
+    n ~= m 이면, O((n+m)^2) 이다.
+    좋지 않다.
+    """
     def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
         """
         Do not return anything, modify nums1 in-place instead.
@@ -88,3 +100,35 @@ class Solution:
             else:
                 if rest_item > 0:
                     nums.append(rest_item)
+
+
+class Solution:
+    """
+    이번에는 다르게 접근해보자. 포인트는 nums1, nums2가 모두 이미 정렬되어 있다는 것.
+    메모리를 이용하면 될 듯하다.
+    """
+
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        if len(nums1) == 0:
+            nums1.extend(nums2)
+
+        if len(nums2) == 0:
+            return
+        
+        merged = []
+        i, j = 0, 0
+        while i < m + n and j < n:
+            if nums1[i] == 0:
+                merged.append(nums2[j])
+                j += 1
+            elif nums1[i] <= nums2[j]:
+                merged.append(nums1[i])
+                i += 1
+            else:
+                merged.append(nums2[j])
+
+        nums1.clear()
+        nums1.extend(merged)
