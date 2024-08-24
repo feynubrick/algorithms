@@ -49,6 +49,7 @@ Follow up: Can you come up with an algorithm that runs in O(m + n) time?
 
 """
 
+
 class OldSolution:
     """
     나의 풀이를 분석해보자.
@@ -62,6 +63,7 @@ class OldSolution:
     n ~= m 이면, O((n+m)^2) 이다.
     좋지 않다.
     """
+
     def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
         """
         Do not return anything, modify nums1 in-place instead.
@@ -105,7 +107,8 @@ class OldSolution:
 class Solution:
     """
     이번에는 다르게 접근해보자. 포인트는 nums1, nums2가 모두 이미 정렬되어 있다는 것.
-    메모리를 이용하면 될 듯하다.
+    이 풀이의 시간 복잡도는 O(m+n)이다.
+
     """
 
     def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
@@ -113,15 +116,15 @@ class Solution:
         Do not return anything, modify nums1 in-place instead.
         """
         if len(nums1) == 0:
-            nums1.extend(nums2)
+            nums1.extend(nums2)  # O(n)
 
-        if len(nums2) == 0:
+        if n == 0:
             return
-        
+
         merged = []
         i, j = 0, 0
-        while i < m + n and j < n:
-            if nums1[i] == 0:
+        while i < m + n and j < n:  # O(m+n)
+            if i >= m and nums1[i] == 0:
                 merged.append(nums2[j])
                 j += 1
             elif nums1[i] <= nums2[j]:
@@ -129,6 +132,13 @@ class Solution:
                 i += 1
             else:
                 merged.append(nums2[j])
+                j += 1
+
+        if i < m:
+            zero_padding_free = [
+                v for k, v in enumerate(nums1[i:]) if not (v == 0 and i + k >= m)
+            ]  # O(m)
+            merged.extend(zero_padding_free)  # O(m)
 
         nums1.clear()
         nums1.extend(merged)
