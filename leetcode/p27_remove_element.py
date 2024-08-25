@@ -59,7 +59,7 @@ Constraints:
 from typing import List
 
 
-class Solution:
+class OldSolution:
     def removeElement(self, nums: List[int], val: int) -> int:
         """
         이 해법은 다음의 복잡도를 갖고 있다.
@@ -70,3 +70,19 @@ class Solution:
         nums.clear()
         nums.extend(filtered_nums)
         return len(filtered_nums)
+
+
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        """
+        이 해법은 다음의 복잡도를 갖고 있다.
+        - 시간 복잡도: O(n)
+        - 공간 복잡도: O(1)
+        """
+        insert_index = 0
+        for i in range(len(nums)):
+            if nums[i] != val:
+                nums[insert_index] = nums[i]
+                insert_index += 1
+
+        return insert_index
